@@ -27,7 +27,7 @@
 2. **进入项目目录**
 
    ```bash
-   cd xixunyunsign-signin-tool
+   cd xixunyunsign
    ```
 
 3. **下载依赖库**
@@ -121,6 +121,8 @@ go build -o xixunyunsign.exe
 - `--longitude`：签到地点的经度（可选，程序会自动从数据库中获取）。
 - `--remark`：备注（可选，默认值为 `0`）。
 - `--comment`：评论（可选）。
+- `-p`:省份（可选）默认 为空
+- `-c`:城市（可选）默认 为空
 
 #### 示例
 
@@ -300,7 +302,7 @@ go build -o xixunyunsign.exe
 ./xixunyunsign.exe query -a user_number
 
 # 执行签到，使用保存的经纬度信息
-./xixunyunsign.exe sign -a user_number --address "江苏省常州市武进区前村一路45号靠近贺北村第三工业园"
+./xixunyunsign.exe sign -a user_number --address "江苏省常州市武进区前村一路45号靠近贺北村第三工业园" --address_name "贺北村第三工业园"
 ```
 
 执行成功后，程序会输出签到结果。
@@ -334,3 +336,7 @@ go build -o xixunyunsign.exe
 - [RSA 加密解密](https://pkg.go.dev/crypto/rsa)
 
 ---
+
+## 查看数据库
+
+请使用navicat连接本项目下的config.db,使用sqlite的方式
