@@ -174,6 +174,12 @@ go build -o xixunyunsign.exe
 ./xixunyunsign.exe sign -a <账号> --address <地址>
 ```
 
+#### 查询学校ID
+
+```bash
+./xixunyunsign.exe search -s <学校名称>
+```
+
 ### 注意事项
 
 - **首次签到前**，请确保已经执行过 `query` 命令，或者手动提供经纬度信息。
@@ -190,7 +196,8 @@ go build -o xixunyunsign.exe
 ├── cmd            // 命令定义
 │   ├── login.go   // 登录命令
 │   ├── query.go   // 查询签到信息命令
-│   └── sign.go    // 执行签到命令
+│   ├── sign.go    // 执行签到命令
+|   └── search_school_id.go //查询签到的学校id
 └── utils          // 工具函数
     ├── database.go // 数据库操作
     └── config.go   // 配置文件读写（已废弃）
@@ -307,6 +314,7 @@ go build -o xixunyunsign.exe
 
 执行成功后，程序会输出签到结果。
 
+
 ---
 
 ## 更新日志
@@ -316,6 +324,11 @@ go build -o xixunyunsign.exe
 - 初始版本，实现了登录、查询签到信息和执行签到的基本功能。
 - 支持多用户操作，使用 SQLite 数据库存储用户信息。
 - 实现了 RSA 加密功能，对经纬度信息进行加密传输。
+
+### v1.1.0
+
+- 实现查询各个学校的ID功能，支持模糊匹配并显示所有匹配结果。
+- 程序优化了数据库的操作流程，提升性能和稳定性。
 
 ---
 
