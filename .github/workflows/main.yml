@@ -1,0 +1,71 @@
+name: Daily Auto Sign
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # 每天凌晨8点触发
+
+jobs:
+  auto-sign:
+    runs-on: windows-latest # 使用Windows最新版本的运行器
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3 # 检出代码仓库
+
+      # 注意：由于您的脚本是直接在Windows命令行中运行exe文件，而不是作为Python模块或脚本，
+      # 因此实际上不需要设置Python环境。这一步可以省略，除非您的脚本依赖于Python的其他功能。
+      # - name: Set up Python
+      #   uses: actions/setup-python@v3 # 设置Python环境（这一步可以省略）
+      #   with:
+      #     python-version: '3.9' # 指定Python版本（这一步可以省略）
+
+      - name: Run auto sign script
+        env:
+          SIGN_PASSWORD: ${{ secrets.SIGN_PASSWORD }} # 从GitHub Secrets中获取密码
+        run: |
+          # 切换到脚本所在的目录（请确保此路径正确）
+          cd C:\Users\ct\xixunyunsign # 修改为您的脚本实际所在的路径（由于直接在命令行中运行，使用绝对路径可能更方便）
+
+          # 由于您的Python脚本似乎是为了直接在命令行中运行而设计的，
+          # 并且它使用了os.system来调用exe文件，我们不能直接通过Python来运行它，
+          # 除非我们修改脚本以接受命令行参数或环境变量。
+          # 但为了匹配您当前的逻辑，我们将直接在shell中运行命令。
+          # 注意：这里我们不会通过命令行参数传递密码给Python脚本，
+          # 因为您的脚本当前不是这样设计的。相反，我们将在脚本内部处理密码。
+          # （强烈建议您在未来修改脚本以更安全地处理密码）
+
+          # 假设您的脚本名为auto_sign.py，但实际上由于它调用exe文件，
+          # 我们可能不需要直接运行这个Python脚本。相反，我们可以创建一个批处理文件（.bat）
+          # 或直接在shell中运行命令。为了简化，这里我们直接在shell中运行命令：
+
+          # 登录
+          xixunyunsign.exe login -a 220723242 -p %SIGN_PASSWORD% -i 2025
+          if errorlevel 1 (
+            echo 登录失败 >> auto_sign.log
+            exit /b 1
+          ) else (
+            echo 登录成功 >> auto_sign.log
+          )
+
+          # 查询
+          xixunyunsign.exe query -a 220723242
+          if errorlevel 1 (
+            echo 查询失败 >> auto_sign.log
+            exit /b 1
+          ) else (
+            echo 查询成功 >> auto_sign.log
+          )
+
+          # 签到
+          xixunyunsign.exe sign -a 220723242 --address 浙江省金华市婺城区创新研究院
+          if errorlevel 1 (
+            echo 签到失败 >> auto_sign.log
+          ) else (
+            echo 签到成功 >> auto_sign.log
+          )
+
+        shell: cmd # 使用CMD作为shell（因为我们在运行Windows命令行命令）
+
+      # 注意：上面的run步骤中，我们直接在shell中运行了命令，而没有通过Python脚本。
+      # 这是因为您的脚本当前是设计为直接在命令行中运行的，并且它调用了exe文件。
+      # 如果您想通过Python脚本来运行这些命令，您需要修改脚本以接受命令行参数或环境变量，
+      # 并使用subprocess模块来安全地运行命令。
