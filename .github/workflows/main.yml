@@ -15,15 +15,14 @@ jobs:
       - name: Unzip xixunyunsign
         run: |
           
-          Expand-Archive -Path xixunyunsign.zip -DestinationPath xixunyunsign
+          Expand-Archive -Path xixunyunsign.zip -DestinationPath .
         shell: powershell  
-
       - name: Run auto sign script
         env:
           SIGN_PASSWORD: ${{ secrets.SIGN_PASSWORD }}  
         run: |
           
-          cd xixunyunsign  
+          cd xixunyunsign
 
           
           xixunyunsign.exe login -a 220723242 -p %SIGN_PASSWORD% -i 2025
