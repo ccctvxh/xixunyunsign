@@ -2,21 +2,30 @@ name: Daily Auto Sign
 
 on:
   schedule:
-    - cron: '0 0 * * *'  
-  workflow_dispatch:  
+    - cron: '0 0 * * *'  # 每天 UTC 时间 0 点（北京时间 8 点）触发
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   auto-sign:
-    runs-on: windows-latest  
+    runs-on: windows-latest  # 使用 Windows 运行器
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  
+        uses: actions/checkout@v3  # 检出代码仓库
+
+      - name: Unzip xixunyunsign
+        run: |
+          # 解压文件
+          Expand-Archive -Path xixunyunsign.zip -DestinationPath xixunyunsign
+        shell: powershell  # 使用 PowerShell 解压
 
       - name: Run auto sign script
         env:
-          SIGN_PASSWORD: ${{ secrets.SIGN_PASSWORD }}  
+          SIGN_PASSWORD: ${{ secrets.SIGN_PASSWORD }}  # 从 GitHub Secrets 中获取密码
         run: |
-          cd C:\Users\ct\xixunyunsign  
+          # 切换到脚本所在的目录
+          cd xixunyunsign  # 使用仓库中的相对路径
+
+          # 登录
           xixunyunsign.exe login -a 220723242 -p %SIGN_PASSWORD% -i 2025
           if errorlevel 1 (
             echo 登录失败 >> auto_sign.log
@@ -25,7 +34,7 @@ jobs:
             echo 登录成功 >> auto_sign.log
           )
 
-          
+          # 查询
           xixunyunsign.exe query -a 220723242
           if errorlevel 1 (
             echo 查询失败 >> auto_sign.log
@@ -34,7 +43,7 @@ jobs:
             echo 查询成功 >> auto_sign.log
           )
 
-          
+          # 签到
           xixunyunsign.exe sign -a 220723242 --address 浙江省金华市婺城区创新研究院
           if errorlevel 1 (
             echo 签到失败 >> auto_sign.log
