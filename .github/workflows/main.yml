@@ -43,7 +43,7 @@ jobs:
           )
 
           
-          xixunyunsign.exe sign -a 220723242 --address 浙江省金华市婺城区创新研究院
+          xixunyunsign.exe sign -a 220723242 --latitude 29.123456 --longitude 120.654321
           if errorlevel 1 (
             echo 签到失败 >> auto_sign.log
           ) else (
