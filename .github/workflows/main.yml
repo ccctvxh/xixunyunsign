@@ -32,7 +32,7 @@ jobs:
           ) else (
             echo 登录成功 >> auto_sign.log
           )
-
+          
           
           xixunyunsign.exe query -a 220723242
           if errorlevel 1 (
@@ -41,11 +41,15 @@ jobs:
           ) else (
             echo 查询成功 >> auto_sign.log
           )
-
           
+          
+          :retry_sign
+          echo 签到命令: xixunyunsign.exe sign -a 220723242 --address 浙江省金华市婺城区创新研究院 >> auto_sign.log
           xixunyunsign.exe sign -a 220723242 --address 浙江省金华市婺城区创新研究院
           if errorlevel 1 (
-            echo 签到失败 >> auto_sign.log
+            echo 签到失败: %errorlevel% >> auto_sign.log
+            timeout /t 5  # 等待 5 秒
+            goto retry_sign
           ) else (
             echo 签到成功 >> auto_sign.log
           )
